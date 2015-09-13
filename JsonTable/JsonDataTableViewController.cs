@@ -9,6 +9,7 @@ using RestSharp.Portable;
 using System.Net.Http;
 using System.Collections.Generic;
 using RestSharp.Portable.Deserializers;
+using System.Linq;
 
 namespace JsonTable
 {
@@ -40,6 +41,10 @@ namespace JsonTable
 			var data = await loadData();
 
 			progressIndicator.Hide (true);
+
+			//sort data
+			data = data.OrderBy( item => item.NAME).ToList();
+
 
 			if (data != null) {
 				JsonDataTable.Source = new JsonDataTableSource (data);
