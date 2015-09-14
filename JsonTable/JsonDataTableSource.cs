@@ -20,10 +20,10 @@ namespace JsonTable
 
 			indexedTableItems = new Dictionary<string, List<Datum>>();
 			foreach (var t in items) {
-				if (indexedTableItems.ContainsKey (t.NAME[0].ToString ())) {
-					indexedTableItems[t.NAME[0].ToString ()].Add(t);
+				if (indexedTableItems.ContainsKey (t.NAME[0].ToString ().ToUpper())) {
+					indexedTableItems[t.NAME[0].ToString ().ToUpper()].Add(t);
 				} else {
-					indexedTableItems.Add (t.NAME[0].ToString (), new List<Datum>() {t});
+					indexedTableItems.Add (t.NAME[0].ToString ().ToUpper(), new List<Datum>() {t});
 				}
 			}
 			keys = indexedTableItems.Keys.ToArray ();
@@ -56,7 +56,7 @@ namespace JsonTable
 				cell = new UITableViewCell (UITableViewCellStyle.Subtitle, CellIdentifier); 
 			}
 
-			cell.TextLabel.Text = item.NAME + " - " + item.TWITTER;
+			cell.TextLabel.Text = item.NAME + ( !String.IsNullOrEmpty(item.TWITTER) ?  ( " - " + item.TWITTER ) : "" );
 			cell.DetailTextLabel.Text = item.WWW;
 
 			return cell;
