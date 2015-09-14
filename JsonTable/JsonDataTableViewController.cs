@@ -21,6 +21,10 @@ namespace JsonTable
 	{
 		public const string jsonApiUrl = "http://www.whatsnewbrowser.com/tl-sources.ashx?p=";
 		public const string serverTimeApiUrl = "http://www.whatsnewbrowser.com/time.ashx";
+		public const string SECRET = "3ef37cdc-0640-4f85-9c51-becd176105c7";
+
+		public static DateTime? baseServerTime;
+		public static TimeSpan offset;
 
 		MTMBProgressHUD progressIndicator;
 
@@ -33,21 +37,23 @@ namespace JsonTable
 			// FETCH SERVER TIME FROM SERVER
 			// THIS WILL BE DONE MANY TIMES WHILE APP IS OPEN
 			// SET GLOBAL VAR THAT KEEPS TRACK OF TIME ONCE BEING SYNCED WITH SERVER TIME
-
-			var textFromFile = (new WebClient()).DownloadString(serverTimeApiUrl);
-			//Console.WriteLine (textFromFile);
-
-			return DateTime.Parse(textFromFile);
+			if (!baseServerTime.HasValue) {
+				var textFromFile = (new WebClient ()).DownloadString (serverTimeApiUrl);
+				baseServerTime = DateTime.Parse(textFromFile);;
+				offset = DateTime.Now - baseServerTime.Value;
+				//Console.WriteLine ("Time offset: " + offset);
+			}
+			return DateTime.Now.Subtract (offset);
 		}
 
 		public static string GetPassword()
 		{
-			var secret = "3ef37cdc-0640-4f85-9c51-becd176105c7";
+			
 
 			var theTime = ServerTime ();
 			long counter = (long)(theTime - UNIX_EPOCH).TotalSeconds / 90;
 
-			return GeneratePassword(secret, counter);
+			return GeneratePassword(SECRET, counter);
 		}
 
 		public static string GeneratePassword(string secret, long
